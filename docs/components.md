@@ -57,18 +57,22 @@ El audio se divide en tres bandas calculadas con la frecuencia real de los bins 
 
 ### Capas del render (en orden)
 
-1. **Velo oscuro semitransparente** sobre el frame anterior (`fillStyle rgba(2,6,23,0.18)`) → estela de movimiento.
+1. **Velo oscuro semitransparente** sobre el frame anterior (`fillStyle rgba(2,6,23,0.12)`) → estela larga, esencial para que las espirales dejen rastro psicodélico.
 2. **Modo de composición aditivo** (`globalCompositeOperation = "lighter"`) → al solaparse colores, brillan más, efecto neón.
-3. **Anillo central** que pulsa con los graves.
-4. **Espectro circular** (líneas radiales que crecen desde un anillo interior, una por cada bin de FFT) → la "rosa" reactiva.
-5. **Partículas radiales** disparadas en cada *pico* de graves (detectado como `bass > 0.35` y mayor que el frame anterior + umbral).
-6. **Chispas dispersas** cuando los agudos superan un umbral.
+3. **Núcleo central**: gradiente radial multicapa que palpita con los graves.
+4. **3 brazos en espiral** que rotan alrededor del centro, hue desfasado a tercios del círculo cromático. Su "twist" (cuántas vueltas dan) y grosor responden a los medios y graves.
+5. **3 brazos en contra-rotación**, más finos, en hue complementario, que reaccionan a los agudos. Su giro inverso refuerza la sensación de bucle.
+6. **Anillos concéntricos** que nacen en cada *pico* de graves y se expanden hacia los bordes mientras se desvanecen — los "bucles".
+7. **Partículas radiales** disparadas en el mismo golpe de graves.
+8. **Chispas dispersas** cuando los agudos superan un umbral.
 
 ### Cómo funciona técnicamente
 
-- Crea su propio `AudioContext` y `AnalyserNode` con `fftSize = 1024` y `smoothingTimeConstant = 0.82`.
+- Crea su propio `AudioContext` y `AnalyserNode` con `fftSize = 1024` y `smoothingTimeConstant = 0.82`. Si arranca `suspended`, llama a `resume()`.
 - Loop con `requestAnimationFrame`. Sin `setState` por frame: los datos viven en variables locales del effect.
-- Cap de **400 partículas vivas** simultáneas para mantener fps estables.
+- **Variables temporales globales**: `hueBase` (avanza 0.4 + bass*1.5 grados/frame, da el ciclo de color) y `globalRotation` (avanza 0.0035 + mid*0.018 rad/frame, mueve las espirales).
+- Cada brazo de espiral se traza con 90 puntos a lo largo de una curva paramétrica `r = t * maxR`, `θ = offset + rotación + t * twist * 2π`.
+- Cap de **500 partículas** y vida finita de los anillos (decay 0.01/frame) para mantener fps estables.
 - Limpieza correcta al desmontar: `cancelAnimationFrame`, `source.disconnect()`, `audioContext.close()`, `removeEventListener("resize")`.
 
 ### Posicionamiento
