@@ -33,6 +33,50 @@ Sí. No conoce ninguna lógica de negocio: recibe `state` y dos callbacks, no ll
 
 ---
 
+## `AudioBars` — [client/src/components/AudioBars.tsx](../client/src/components/AudioBars.tsx)
+
+Visualizador de barras de frecuencia: dibuja N barras verticales centradas en un canvas, cuya altura responde a la energía de cada banda de frecuencia del audio entrante. Es la primera iteración de la visualización (HU-04).
+
+### Props
+
+```ts
+type Props = {
+  stream: MediaStream;     // requerido — la fuente de audio
+  bars?: number;           // por defecto 48
+  color?: string;          // por defecto "#34d399" (esmeralda)
+};
+```
+
+### Cómo funciona
+
+1. Crea un `AudioContext` propio y conecta el `MediaStream` a un `AnalyserNode`.
+2. Configura `fftSize` como la siguiente potencia de 2 que cubra `bars * 2` (Web Audio lo exige).
+3. Aplica `smoothingTimeConstant = 0.75` para que las barras no parpadeen.
+4. En cada frame (`requestAnimationFrame`), pide `getByteFrequencyData()` y dibuja una barra por bin con `roundRect`.
+5. Al desmontar: cancela el rAF, desconecta el source y cierra el `AudioContext`.
+
+### Detalles de renderizado
+
+- **DPR**: las dimensiones internas del canvas se multiplican por `window.devicePixelRatio` para que las barras se vean crujientes en pantallas retina.
+- **Centrado vertical**: cada barra crece simétricamente desde la línea media.
+- **Altura mínima**: `1.5 px` para que siempre se vea algo (no una pantalla en blanco al silencio).
+
+### Reutilizable
+
+Sí. No conoce ninguna lógica de negocio: recibe un `MediaStream` y dibuja. Se podrían instanciar varios con distintas `color`/`bars` para distintos efectos.
+
+### Usado en
+
+- [HomePage](../client/src/pages/HomePage.tsx) — montado solo cuando `microphone.state.kind === "listening"`, gracias al *narrowing* del tipo discriminado de `MicrophoneState`.
+
+### Pendiente para HU-03 + HU-04 completas
+
+- Reaccionar al **tono** (color de las barras según pitch detectado).
+- Reaccionar al **ritmo** (pulso visual en cada onset).
+- Soporte de **estilos** y **paletas** seleccionables (HU-08).
+
+---
+
 ## `StatusIndicator` — [client/src/components/StatusIndicator.tsx](../client/src/components/StatusIndicator.tsx)
 
 Indicador textual con punto de color que comunica el estado del micrófono al usuario en lenguaje natural.

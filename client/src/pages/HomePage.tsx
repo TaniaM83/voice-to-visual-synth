@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AudioBars } from "../components/AudioBars";
 import { MicButton } from "../components/MicButton";
 import { StatusIndicator } from "../components/StatusIndicator";
 import { useMicrophone } from "../hooks/useMicrophone";
@@ -56,6 +57,9 @@ export function HomePage() {
             onStop={microphone.stop}
           />
           <StatusIndicator state={microphone.state} />
+          {microphone.state.kind === "listening" && (
+            <AudioBars stream={microphone.state.stream} />
+          )}
         </div>
 
         <div className="rounded-lg border border-slate-800 p-4 text-sm">
