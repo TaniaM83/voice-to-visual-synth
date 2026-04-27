@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AudioBars } from "../components/AudioBars";
+import { BackgroundVisualizer } from "../components/BackgroundVisualizer";
 import { MicButton } from "../components/MicButton";
 import { StatusIndicator } from "../components/StatusIndicator";
 import { useMicrophone } from "../hooks/useMicrophone";
@@ -15,6 +15,7 @@ type HealthState =
 export function HomePage() {
   const [health, setHealth] = useState<HealthState>({ kind: "idle" });
   const microphone = useMicrophone();
+  const isListening = microphone.state.kind === "listening";
 
   useEffect(() => {
     let cancelled = false;
@@ -39,8 +40,18 @@ export function HomePage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-8">
-      <section className="max-w-xl w-full space-y-8 text-center">
+    <main className="relative min-h-screen flex items-center justify-center p-8">
+      {microphone.state.kind === "listening" && (
+        <BackgroundVisualizer stream={microphone.state.stream} />
+      )}
+
+      <section
+        className={`relative z-10 max-w-xl w-full space-y-8 text-center transition-all ${
+          isListening
+            ? "rounded-2xl bg-slate-950/55 backdrop-blur-md p-8 ring-1 ring-white/10"
+            : ""
+        }`}
+      >
         <header className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">
             Voice to Visual Synth
@@ -57,9 +68,6 @@ export function HomePage() {
             onStop={microphone.stop}
           />
           <StatusIndicator state={microphone.state} />
-          {microphone.state.kind === "listening" && (
-            <AudioBars stream={microphone.state.stream} />
-          )}
         </div>
 
         <div className="rounded-lg border border-slate-800 p-4 text-sm">

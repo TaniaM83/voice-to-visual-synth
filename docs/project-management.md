@@ -111,12 +111,14 @@ Formato: **Como [rol], quiero [acción], para [beneficio]** + criterios de acept
 - CA3: Al dejar de hablar, la visualización decae suavemente (no corte abrupto).
 
 **ST:**
-- [x] Componente `AudioBars` con `<canvas>` y `AnalyserNode` propios (primera iteración: barras de frecuencia con altura por bin).
+- [x] Componente `AudioBars` (primera iteración minimalista; conservado pero no montado).
+- [x] Componente `BackgroundVisualizer` a pantalla completa con espectro circular, anillo central y partículas reactivas a graves/medios/agudos.
 - [x] Loop de render con `requestAnimationFrame`.
-- [ ] Mapear `volume` → tamaño/intensidad, `pitch` → tono de color (HSL), `onsets` → impulso/pulso.
-- [x] Implementar decaimiento suave (vía `smoothingTimeConstant` del `AnalyserNode`).
+- [x] Implementar decaimiento suave (vía `smoothingTimeConstant` del `AnalyserNode` + estela con velo semitransparente).
+- [x] Mapear graves → anillo + partículas radiales, medios → tono base de color, agudos → chispas dispersas.
+- [ ] Mapear `pitch` detectado a hue puntual (requiere HU-03).
+- [ ] Mapear `onsets` a pulsos visuales discretos (requiere HU-03).
 - [ ] Medir fps con `performance.now()` en dev y mostrar overlay de debug (toggle).
-- [ ] Cumplir CA2 completo (requiere HU-03 con extracción de pitch y onsets).
 
 ---
 

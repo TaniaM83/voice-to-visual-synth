@@ -33,9 +33,75 @@ Sí. No conoce ninguna lógica de negocio: recibe `state` y dos callbacks, no ll
 
 ---
 
+## `BackgroundVisualizer` — [client/src/components/BackgroundVisualizer.tsx](../client/src/components/BackgroundVisualizer.tsx)
+
+Visualizador inmersivo a pantalla completa, inspirado en los visualizadores de los reproductores de música de los 2000 (Windows Media Player, Winamp, iTunes). Se monta como `<canvas>` fijo detrás de la UI cuando el micrófono está activo y reacciona a **graves, medios y agudos** por separado.
+
+### Props
+
+```ts
+type Props = {
+  stream: MediaStream;
+};
+```
+
+### Bandas de frecuencia
+
+El audio se divide en tres bandas calculadas con la frecuencia real de los bins del FFT (`sampleRate / 2 / bins`):
+
+| Banda      | Rango aprox.       | Lo que controla en la visualización                                |
+|------------|--------------------|---------------------------------------------------------------------|
+| Graves     | 0 – 250 Hz         | Tamaño y grosor del anillo central, ráfaga de partículas radiales.  |
+| Medios     | 250 – 2000 Hz      | Desplazamiento del tono base de color (hue).                        |
+| Agudos     | 2 – 8 kHz          | Chispas dispersas por toda la pantalla con tonos cálidos.           |
+
+### Capas del render (en orden)
+
+1. **Velo oscuro semitransparente** sobre el frame anterior (`fillStyle rgba(2,6,23,0.18)`) → estela de movimiento.
+2. **Modo de composición aditivo** (`globalCompositeOperation = "lighter"`) → al solaparse colores, brillan más, efecto neón.
+3. **Anillo central** que pulsa con los graves.
+4. **Espectro circular** (líneas radiales que crecen desde un anillo interior, una por cada bin de FFT) → la "rosa" reactiva.
+5. **Partículas radiales** disparadas en cada *pico* de graves (detectado como `bass > 0.35` y mayor que el frame anterior + umbral).
+6. **Chispas dispersas** cuando los agudos superan un umbral.
+
+### Cómo funciona técnicamente
+
+- Crea su propio `AudioContext` y `AnalyserNode` con `fftSize = 1024` y `smoothingTimeConstant = 0.82`.
+- Loop con `requestAnimationFrame`. Sin `setState` por frame: los datos viven en variables locales del effect.
+- Cap de **400 partículas vivas** simultáneas para mantener fps estables.
+- Limpieza correcta al desmontar: `cancelAnimationFrame`, `source.disconnect()`, `audioContext.close()`, `removeEventListener("resize")`.
+
+### Posicionamiento
+
+```html
+<canvas class="fixed inset-0 -z-10 pointer-events-none" />
+```
+
+- `fixed inset-0` → cubre todo el viewport pase lo que pase con el scroll.
+- `-z-10` → queda debajo de la UI (que está en `z-10`).
+- `pointer-events-none` → no intercepta clics.
+- `aria-hidden="true"` → invisible para lectores de pantalla (es decorativo).
+
+### Reutilizable
+
+Sí: solo necesita un `MediaStream`. Podría reutilizarse para visualizar la reproducción de una sesión guardada (HU-06) sin cambios.
+
+### Usado en
+
+- [HomePage](../client/src/pages/HomePage.tsx) — montado solo cuando `microphone.state.kind === "listening"`.
+
+### Pendientes para versiones futuras
+
+- Mapeo a **pitch detectado** (HU-03): el color cambiaría con la nota, no solo con la energía media.
+- **Estilos seleccionables** (HU-08): "partículas" / "ondas" / "malla" como variantes con la misma API.
+- **Paletas** alternativas (oscuro / neón / pastel).
+- Overlay opcional de FPS para depurar (DEV).
+
+---
+
 ## `AudioBars` — [client/src/components/AudioBars.tsx](../client/src/components/AudioBars.tsx)
 
-Visualizador de barras de frecuencia: dibuja N barras verticales centradas en un canvas, cuya altura responde a la energía de cada banda de frecuencia del audio entrante. Es la primera iteración de la visualización (HU-04).
+Visualizador de barras de frecuencia clásico: dibuja N barras verticales centradas en un canvas, cuya altura responde a la energía de cada banda de frecuencia. Componente conservado por si se quiere un modo "minimalista" alternativo al `BackgroundVisualizer`. Hoy no está montado en ninguna página.
 
 ### Props
 
@@ -67,13 +133,7 @@ Sí. No conoce ninguna lógica de negocio: recibe un `MediaStream` y dibuja. Se 
 
 ### Usado en
 
-- [HomePage](../client/src/pages/HomePage.tsx) — montado solo cuando `microphone.state.kind === "listening"`, gracias al *narrowing* del tipo discriminado de `MicrophoneState`.
-
-### Pendiente para HU-03 + HU-04 completas
-
-- Reaccionar al **tono** (color de las barras según pitch detectado).
-- Reaccionar al **ritmo** (pulso visual en cada onset).
-- Soporte de **estilos** y **paletas** seleccionables (HU-08).
+- Ningún lugar actualmente. Se mantiene como alternativa minimalista al `BackgroundVisualizer`.
 
 ---
 
@@ -121,10 +181,12 @@ Página principal de la app. Orquesta los componentes y consume el hook `useMicr
 
 ```
 HomePage
-├── header (título + descripción)
-├── MicButton    ◄── controla el ciclo del micrófono
-├── StatusIndicator
-└── caja "Backend: ok" (health check)
+├── BackgroundVisualizer  ◄── solo cuando state.kind === "listening"
+├── section (z-10, con backdrop-blur cuando escucha)
+│   ├── header (título + descripción)
+│   ├── MicButton    ◄── controla el ciclo del micrófono
+│   ├── StatusIndicator
+│   └── caja "Backend: ok" (health check)
 ```
 
 ### Reutilizable
