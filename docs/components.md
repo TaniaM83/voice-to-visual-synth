@@ -74,11 +74,11 @@ El audio se divide en tres bandas calculadas con la frecuencia real de los bins 
 ### Posicionamiento
 
 ```html
-<canvas class="fixed inset-0 -z-10 pointer-events-none" />
+<canvas class="fixed inset-0 z-0 pointer-events-none" />
 ```
 
 - `fixed inset-0` → cubre todo el viewport pase lo que pase con el scroll.
-- `-z-10` → queda debajo de la UI (que está en `z-10`).
+- `z-0` → crea su propio stacking context en la base, debajo de la UI (`z-10`) pero por encima del fondo del `body`. **Importante**: `-z-10` lo escondía detrás del fondo del `body` (gotcha clásico de CSS con z-index negativos).
 - `pointer-events-none` → no intercepta clics.
 - `aria-hidden="true"` → invisible para lectores de pantalla (es decorativo).
 

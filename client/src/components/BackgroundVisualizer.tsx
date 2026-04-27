@@ -43,6 +43,9 @@ export function BackgroundVisualizer({ stream }: Props) {
     window.addEventListener("resize", resize);
 
     const audioContext = new AudioContext();
+    if (audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
     const source = audioContext.createMediaStreamSource(stream);
     const analyser = audioContext.createAnalyser();
     analyser.fftSize = FFT_SIZE;
@@ -190,7 +193,7 @@ export function BackgroundVisualizer({ stream }: Props) {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="fixed inset-0 -z-10 pointer-events-none"
+      className="fixed inset-0 z-0 pointer-events-none"
     />
   );
 }
