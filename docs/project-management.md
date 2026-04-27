@@ -46,7 +46,7 @@ Formato: **Como [rol], quiero [acción], para [beneficio]** + criterios de acept
 
 ---
 
-### HU-01 — Scaffold del monorepo `infra`
+### HU-01 — Scaffold del monorepo `infra` ✅
 **Como** desarrolladora, **quiero** un monorepo con `client/` y `server/` y scripts para correr ambos, **para** empezar a trabajar sin fricción.
 
 **CA:**
@@ -55,18 +55,18 @@ Formato: **Como [rol], quiero [acción], para [beneficio]** + criterios de acept
 - CA3: El repo ya no contiene ningún archivo del scaffold de Java.
 
 **ST:**
-- [ ] Eliminar `src/App.java`, `bin/`, `lib/` y `.vscode/settings.json` del scaffold Java.
-- [ ] Crear `client/` con `package.json`, `vite.config.ts`, `tsconfig.json`, `index.html`, `src/main.tsx`, `src/App.tsx`, `src/index.css`.
-- [ ] Configurar Tailwind v4 vía `@tailwindcss/vite` y `@import "tailwindcss";`.
-- [ ] Crear `server/` con `package.json`, `tsconfig.json`, `src/index.ts`, `src/app.ts`.
-- [ ] Configurar capas: `routes/`, `controllers/`, `services/`, `data/`, `types/`, `config/`.
-- [ ] Configurar proxy `/api` en `vite.config.ts` para evitar CORS en dev.
-- [ ] `git init` + primer commit.
-- [ ] Documentar instalación y scripts en `README.md`.
+- [x] Eliminar `src/App.java`, `bin/`, `lib/` y `.vscode/settings.json` del scaffold Java.
+- [x] Crear `client/` con `package.json`, `vite.config.ts`, `tsconfig.json`, `index.html`, `src/main.tsx`, `src/App.tsx`, `src/index.css`.
+- [x] Configurar Tailwind v4 vía `@tailwindcss/vite` y `@import "tailwindcss";`.
+- [x] Crear `server/` con `package.json`, `tsconfig.json`, `src/index.ts`, `src/app.ts`.
+- [x] Configurar capas: `routes/`, `controllers/`, `services/`, `data/`, `types/`, `config/`.
+- [x] Configurar proxy `/api` en `vite.config.ts` para evitar CORS en dev.
+- [x] `git init` + primer commit.
+- [x] Documentar instalación y scripts en `README.md`.
 
 ---
 
-### HU-02 — Permiso de micrófono y estado `listening` `frontend` `audio`
+### HU-02 — Permiso de micrófono y estado `listening` `frontend` `audio` ✅
 **Como** usuario, **quiero** activar el micrófono con un botón claro, **para** empezar a ver la visualización.
 
 **CA:**
@@ -75,11 +75,11 @@ Formato: **Como [rol], quiero [acción], para [beneficio]** + criterios de acept
 - CA3: Si se deniega, se muestra un mensaje de error legible (no pantalla en blanco).
 
 **ST:**
-- [ ] Crear hook `useMicrophone` que envuelva `navigator.mediaDevices.getUserMedia`.
-- [ ] Modelar la máquina de estados: `idle | requesting | listening | denied | error`.
-- [ ] Componente `MicButton` con tres apariencias visuales (idle / listening / error).
-- [ ] Componente `StatusIndicator` que muestre el estado actual con texto e icono.
-- [ ] Asegurar que el `MediaStream` se libera correctamente al desmontar (cleanup en `useEffect`).
+- [x] Crear hook `useMicrophone` que envuelva `navigator.mediaDevices.getUserMedia`.
+- [x] Modelar la máquina de estados: `idle | requesting | listening | denied | error`.
+- [x] Componente `MicButton` con tres apariencias visuales (idle / listening / error).
+- [x] Componente `StatusIndicator` que muestre el estado actual con texto e icono.
+- [x] Asegurar que el `MediaStream` se libera correctamente al desmontar (cleanup en `useEffect`).
 - [ ] Probar en Chrome y Firefox; capturar la pantalla de denegación de permiso.
 
 ---

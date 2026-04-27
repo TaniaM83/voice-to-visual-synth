@@ -7,6 +7,9 @@ Aplicación fullstack que convierte la voz en visuales abstractos en tiempo real
 - [docs/idea.md](docs/idea.md) — descripción del producto, features, criterios de aceptación, mejoras futuras.
 - [docs/agile.md](docs/agile.md) — fundamentos de Agile, Scrum y Kanban.
 - [docs/project-management.md](docs/project-management.md) — metodología, tablero, historias de usuario con subtareas técnicas y definición de *Done*.
+- [docs/design.md](docs/design.md) — arquitectura, componentes, estado, API REST, flujo de datos.
+- [docs/components.md](docs/components.md) — componentes React implementados.
+- [docs/hooks.md](docs/hooks.md) — custom hooks y su API.
 
 ## Estructura del repo
 
@@ -92,4 +95,4 @@ Detalle de columnas, etiquetas, historias de usuario y subtareas técnicas en [d
 
 ## Estado del proyecto
 
-En fase de scaffolding. La siguiente historia a tomar es **HU-02** (permiso de micrófono y estado `listening`) según el backlog en [docs/project-management.md](docs/project-management.md).
+HU-01 (scaffold) y HU-02 (permiso de micrófono + estado `listening`) completas. La siguiente historia es **HU-03** (extracción de tono, ritmo y volumen en tiempo real) según el backlog en [docs/project-management.md](docs/project-management.md).

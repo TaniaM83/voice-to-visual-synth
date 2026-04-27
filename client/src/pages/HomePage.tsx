@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { MicButton } from "../components/MicButton";
+import { StatusIndicator } from "../components/StatusIndicator";
+import { useMicrophone } from "../hooks/useMicrophone";
 
 type HealthResponse = { status: "ok"; uptime: number };
 
@@ -10,6 +13,7 @@ type HealthState =
 
 export function HomePage() {
   const [health, setHealth] = useState<HealthState>({ kind: "idle" });
+  const microphone = useMicrophone();
 
   useEffect(() => {
     let cancelled = false;
@@ -35,13 +39,25 @@ export function HomePage() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-8">
-      <section className="max-w-xl w-full space-y-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Voice to Visual Synth
-        </h1>
-        <p className="text-slate-400">
-          Convierte voz en visuales abstractos en tiempo real.
-        </p>
+      <section className="max-w-xl w-full space-y-8 text-center">
+        <header className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight">
+            Voice to Visual Synth
+          </h1>
+          <p className="text-slate-400">
+            Convierte voz en visuales abstractos en tiempo real.
+          </p>
+        </header>
+
+        <div className="flex flex-col items-center gap-4">
+          <MicButton
+            state={microphone.state.kind}
+            onRequest={microphone.request}
+            onStop={microphone.stop}
+          />
+          <StatusIndicator state={microphone.state} />
+        </div>
+
         <div className="rounded-lg border border-slate-800 p-4 text-sm">
           <span className="text-slate-500">Backend: </span>
           {health.kind === "idle" && <span>inactivo</span>}
