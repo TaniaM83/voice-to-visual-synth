@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm --prefix client run build)",
-      "Bash(npm --prefix client run dev)"
-    ]
-  }
-}
