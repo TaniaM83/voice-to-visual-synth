@@ -15,8 +15,8 @@ function viewFor(state: MicrophoneState): View {
     case "listening":
       return {
         text: "Escuchando…",
-        dotClass: "bg-emerald-400 animate-pulse",
-        textClass: "text-emerald-300",
+        dotClass: "bg-spotify-400 animate-pulse",
+        textClass: "text-spotify-300",
       };
     case "requesting":
       return {

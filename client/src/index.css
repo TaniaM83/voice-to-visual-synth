@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --color-spotify-300: #3be37a;
+  --color-spotify-400: #1ed760;
+  --color-spotify-500: #1db954;
+}
+
 html,
 body,
 #root {
@@ -7,6 +13,109 @@ body,
 }
 
 body {
-  background-color: rgb(2 6 23);
   color: rgb(241 245 249);
+  background-color: #0b0b12;
+}
+
+/* Atmósfera: dos orbes desenfocados que flotan lentamente. Sin mix-blend-mode
+   y con blur reducido para no hundir la GPU al componer con backdrop-filter. */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-orbs::before,
+.bg-orbs::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.4;
+  will-change: transform;
+}
+.bg-orbs::before {
+  width: 32vmax;
+  height: 32vmax;
+  top: -8vmax;
+  left: -8vmax;
+  background: radial-gradient(circle at 30% 30%, #a855f7, transparent 60%);
+  animation: orb-float 30s ease-in-out infinite;
+}
+.bg-orbs::after {
+  width: 28vmax;
+  height: 28vmax;
+  bottom: -10vmax;
+  right: -6vmax;
+  background: radial-gradient(circle at 70% 70%, #22d3ee, transparent 60%);
+  animation: orb-float 36s ease-in-out -10s infinite reverse;
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(6vmax, -4vmax, 0); }
+}
+
+/* Título hero con gradiente animado. */
+.title-glow {
+  background: linear-gradient(
+    100deg,
+    #f472b6 0%,
+    #a855f7 25%,
+    #22d3ee 55%,
+    #3be37a 85%
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: title-shift 12s ease-in-out infinite;
+  text-shadow: 0 0 60px rgba(168, 85, 247, 0.25);
+}
+
+@keyframes title-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Borde luminoso de la tarjeta principal. Estático: animar box-shadow con dos
+   sombras grandes obliga a repintar toda la tarjeta cada frame. */
+.glow-ring {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(168, 85, 247, 0.2),
+    0 25px 70px -25px rgba(34, 211, 238, 0.3),
+    0 25px 70px -25px rgba(168, 85, 247, 0.24);
+}
+
+/* "Aurora preview" — disco como mark visual encima del título. Más pequeño
+   y sin conic-gradient (caro de pintar con blur) para no penalizar el frame. */
+.aurora-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 30% 30%, #f472b6 0%, transparent 55%),
+    radial-gradient(circle at 75% 35%, #a855f7 0%, transparent 55%),
+    radial-gradient(circle at 65% 75%, #22d3ee 0%, transparent 60%),
+    radial-gradient(circle at 35% 75%, #3be37a 0%, transparent 55%);
+  filter: blur(1px);
+  animation: aurora-preview-anim 14s linear infinite;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 32px 2px rgba(168, 85, 247, 0.3);
+}
+
+@keyframes aurora-preview-anim {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-orbs::before,
+  .bg-orbs::after,
+  .title-glow,
+  .aurora-preview {
+    animation: none;
+  }
 }

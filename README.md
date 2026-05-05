@@ -13,7 +13,6 @@ Aplicación fullstack que convierte la voz en visuales abstractos en tiempo real
 
 ## Estructura del repo
 
-```
 voiceToVisualSynth/
 ├── client/          # React + TypeScript + Vite + Tailwind v4
 │   └── src/

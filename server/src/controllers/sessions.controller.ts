@@ -24,7 +24,7 @@ export const sessionsController = {
     return res.status(201).json({ data: session });
   },
 
-  getById(req: Request, res: Response) {
+  getById(req: Request<{ id: string }>, res: Response) {
     const session = sessionsService.getById(req.params.id);
     if (!session) {
       return res.status(404).json({ error: { message: "Session not found" } });

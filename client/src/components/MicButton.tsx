@@ -31,11 +31,11 @@ export function MicButton({ state, onRequest, onStop }: Props) {
   })();
 
   const baseClass =
-    "inline-flex items-center gap-3 rounded-full px-6 py-3 font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950";
+    "inline-flex items-center gap-3 rounded-full px-6 py-3 font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1e1e1e]";
 
   const stateClass = (() => {
     if (isListening) {
-      return "bg-emerald-500 hover:bg-emerald-400 text-slate-950 focus-visible:ring-emerald-400";
+      return "bg-spotify-500 hover:bg-spotify-400 text-black focus-visible:ring-spotify-400";
     }
     if (state === "denied" || state === "error") {
       return "bg-rose-500 hover:bg-rose-400 text-white focus-visible:ring-rose-400";
@@ -61,7 +61,7 @@ function MicIcon({ listening }: { listening: boolean }) {
   return (
     <span className="relative inline-flex h-5 w-5 items-center justify-center">
       {listening && (
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-60" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-spotify-300 opacity-60" />
       )}
       <svg
         viewBox="0 0 24 24"

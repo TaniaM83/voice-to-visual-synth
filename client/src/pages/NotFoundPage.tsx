@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export function NotFoundPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-8">
+    <main className="min-h-screen bg-[#1e1e1e] text-slate-100 flex items-center justify-center p-8">
       <section className="max-w-md w-full space-y-4 text-center">
         <p className="text-6xl font-bold text-slate-700">404</p>
         <h1 className="text-2xl font-semibold">Página no encontrada</h1>

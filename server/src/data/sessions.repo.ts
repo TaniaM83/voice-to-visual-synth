@@ -9,7 +9,4 @@ export const sessionsRepo = {
   findById(id: string): Session | undefined {
     return store.get(id);
   },
-  findAll(): Session[] {
-    return [...store.values()];
-  },
 };

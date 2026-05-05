@@ -116,6 +116,7 @@ Formato: **Como [rol], quiero [acción], para [beneficio]** + criterios de acept
 - [x] Loop de render con `requestAnimationFrame`.
 - [x] Implementar decaimiento suave (vía `smoothingTimeConstant` del `AnalyserNode` + estela con velo semitransparente).
 - [x] Mapear graves → anillo + partículas radiales, medios → tono base de color, agudos → chispas dispersas.
+- [x] Iteración 3 (rediseño): se sustituyen espirales, anillos sueltos y partículas por una **única figura tipo "aurora"** — contorno cerrado de 180 puntos cuyo radio polar se deforma con el espectro, halo radial detrás y eco trasero del mismo contorno. Motivo: la composición anterior se leía como "maraña de círculos sin sentido" porque seis capas con `globalCompositeOperation = "lighter"` y un velo de estela débil acumulaban geometría sin desvanecer. La nueva versión usa `source-over` con alpha controlado, suavizado EMA en todas las señales (`vol`, `bass`, `treble`, `centroide espectral`, `pulso de onset`) y mapea volumen → tamaño, centroide → hue (proxy de tono hasta HU-03), onsets → empuje breve del radio (no genera anillos sueltos).
 - [ ] Mapear `pitch` detectado a hue puntual (requiere HU-03).
 - [ ] Mapear `onsets` a pulsos visuales discretos (requiere HU-03).
 - [ ] Medir fps con `performance.now()` en dev y mostrar overlay de debug (toggle).
